@@ -9,11 +9,11 @@ class DB(val context:Context) : SQLiteOpenHelper(context, DB_NAME,null, DB_VERSI
 
 
     override fun onCreate(db: SQLiteDatabase) {
-        onCreate(db)
+        db.execSQL(SqlTable.admin)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        onCreate(db)
+
     }
 
     fun executeQuery(sql:String):Boolean{
