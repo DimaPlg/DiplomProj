@@ -10,6 +10,8 @@ class DB(val context:Context) : SQLiteOpenHelper(context, DB_NAME,null, DB_VERSI
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SqlTable.admin)
+        db.execSQL(SqlTable.member)
+        db.execSQL(SqlTable.fee)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

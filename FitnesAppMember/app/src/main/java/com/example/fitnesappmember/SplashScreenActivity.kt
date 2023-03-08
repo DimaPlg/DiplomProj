@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.example.fitnesappmember.activity.HomeActivity
 import com.example.fitnesappmember.activity.LoginActivity
@@ -26,7 +27,7 @@ class SplashScreenActivity : AppCompatActivity() {
         session = SessionManager(this)
 
         insertAdminData()
-        mDelayHandler = Handler()
+        mDelayHandler = Handler(Looper.getMainLooper())
         mDelayHandler?.postDelayed(mRunnable, splash_delay)
     }
 
