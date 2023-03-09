@@ -21,6 +21,8 @@ import com.example.fitnesappmember.R
 import com.example.fitnesappmember.databinding.FragmentAddMemberBinding
 import com.example.fitnesappmember.global.DB
 import com.example.fitnesappmember.global.MyFunction
+import android.database.sqlite.SQLiteOpenHelper
+import android.database.sqlite.SQLiteDatabase
 import java.util.*
 
 class FragmentAddMember : Fragment() {
@@ -31,6 +33,7 @@ class FragmentAddMember : Fragment() {
     var treeMonths:String? = ""
     var sixMonths:String? = ""
     var oneYear:String? = ""
+    private var gender = "Male"
     private lateinit var binding: FragmentAddMemberBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -109,6 +112,24 @@ class FragmentAddMember : Fragment() {
             }
 
         })
+
+        binding.radioGroup.setOnCheckedChangeListener { radioGroup, i ->
+            when(id){
+                R.id.rdMale ->{
+                    gender = "Male"
+                }
+                R.id.rdFemale ->{
+                    gender = "Female"
+                }
+            }
+        }
+
+        binding.btnAddMemberSave.setOnClickListener {
+            if (validate()){
+
+            }
+
+        }
 
         binding.imgPicDate.setOnClickListener{
             activity?.let{ it1 -> DatePickerDialog(it1,dateSetListener,
@@ -215,6 +236,51 @@ class FragmentAddMember : Fragment() {
     }
     private fun showToast(value: String){
         Toast.makeText(activity,value, Toast.LENGTH_LONG).show()
+    }
+
+    private  fun  validate():Boolean{
+        if (binding.edtFirstName.text.toString().trim().isEmpty()){
+            showToast("Enter first name")
+            return false
+        }else if (binding.edtLastName.text.toString().trim().isEmpty()){
+            showToast("Enter last name")
+            return false
+        }else if (binding.edtAge.text.toString().trim().isEmpty()){
+            showToast("Enter age ")
+            return false
+        }else if (binding.edtMobile.text.toString().trim().isEmpty()){
+            showToast("Enter mobile number")
+            return false
+        }
+        return  true
+    }
+
+    private fun saveDate(){
+        try {
+            val sqlQuery = "INSERT OR REPLACE INTO MEMBER(ID,FIRST_NAME,LAST_NAME,GENDER,AGE,"+
+                    "WEIGHT,MOBILE,ADDRESS,DATE_OF_JOINING,MEMBERSHIP,EXPIRE_ON,DISCOUNT,TOTAL,STATUS)VALUES"+
+                    "('"+getIncrementedId()+"',"DatabaseUtils.sqlEscapeString(binding.edtFirstName.text.toString().trim())+")"
+
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+    private fun getIncrementedId():String{
+        var incrementId = ""
+        try {
+            val sqlQuery = "SELECT MAX(ID)+1 AS ID FROM MEMBER"
+            db?.fireQuery(sqlQuery)?.use{
+                if (it.count>0) {
+                    incrementId = MyFunction.getValue(it, "ID")
+                }
+            }
+
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+        return incrementId
     }
 
    /* private fun getImage(){
